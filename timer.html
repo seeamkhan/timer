@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer and Stopwatch</title>
+    <style>
+        body {
+            font-family: 'Digital-7', Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #756c6c;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px auto;
+            background: #8f8f8f;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+/*        .display {
+            font-size: 10rem;
+            margin-bottom: 20px;
+        }*/
+        @font-face {
+            font-family: 'Digital-7';
+            src: url('digital-7.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        .display {
+            font-size: 12rem;
+            margin-bottom: 50px;
+            font-family: 'Digital-7', monospace; /* Use the VT323 font */
+            font-weight: normal;
+            letter-spacing: 0.00em;
+            color: #bd0202;
+            background-color: #a3a0a0; /* White background */
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 10px 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        .controls button {
+            margin: 10px;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #034f9c;
+            color: #fff;
+        }
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+        .controls .primary {
+            background-color: #4CAF50;
+            font-weight: bold;
+        }
+        .controls .primary:hover {
+            background-color: #45a049;
+        }
+        .controls .primary2 {
+            background-color: #cca702;
+            font-weight: bold;
+        }
+        .controls .primary2:hover {
+            background-color: #a68802;
+        }
+        .controls .primary3 {
+            background-color: #af6b4c;
+            font-weight: bold;
+        }
+        .controls .primary3:hover {
+            background-color: #995d42;
+        }
+        .switcher {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .switcher button {
+            padding: 15px 30px; /* Increase padding for a more prominent button */
+            font-size: 2rem;
+            cursor: pointer;
+            background: linear-gradient(135deg, #d1d1d1, #a1a1a1); /* Subtle gradient for depth */
+            color: #333;
+            border: 2px solid #888; /* Slightly thicker border for emphasis */
+            border-radius: 10px; /* Rounded corners for a softer look */
+            transition: all 0.3s ease; /* Smooth hover animations */
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+        }
+
+        .switcher button:hover {
+            background: linear-gradient(135deg, #a1a1a1, #787878); /* Darker gradient on hover */
+            color: #fff; /* Change text color to white */
+            border-color: #555; /* Darken the border on hover */
+            transform: translateY(-3px); /* Subtle "lift" effect on hover */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+        }
+
+        .time-input {
+            width: 200px;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- <h1>Timer & Stopwatch</h1> -->
+        <div class="switcher">
+            <button id="switchToTimer">Timer</button>
+            <button id="switchToStopwatch">Stopwatch</button>
+        </div>
+        <!-- <input type="text" id="timeInput" class="time-input" placeholder="00:00:00"> -->
+        <div class="display" id="timeDisplay">00:00:00</div>
+        <div class="controls" id="timerControls">
+            <button id="startTimer" class="primary">Start</button>
+            <button id="pauseTimer" class="primary2">Pause</button>
+            <button id="resetTimer" class="primary3">Reset</button>
+            <button id="add30Sec">+30 Sec</button>
+            <button id="add1Min">+1 Min</button>
+            <button id="add5Min">+5 Min</button>
+            <button id="add10Min">+10 Min</button>
+        </div>
+        <div class="controls" id="stopwatchControls" style="display: none;">
+            <button id="startStopwatch" class="primary">Start</button>
+            <button id="pauseStopwatch" class="primary2">Pause</button>
+            <button id="resetStopwatch" class="primary3">Reset</button>
+        </div>
+    </div>
+
+    <audio id="alarmSound" src="race-start-beeps-125125.mp3"></audio>
+
+    <script>
+        let timerInterval, stopwatchInterval;
+        let timerTime = 0;
+        let stopwatchTime = 0;
+        const display = document.getElementById('timeDisplay');
+        const alarmSound = document.getElementById('alarmSound');
+        // const timeInput = document.getElementById('timeInput');
+
+        const updateDisplay = (time) => {
+            const hours = String(Math.floor(time / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((time % 3600) / 60)).padStart(2, '0');
+            const seconds = String(time % 60).padStart(2, '0');
+            display.textContent = `${hours}:${minutes}:${seconds}`;
+        };
+
+        // const parseTimeInput = () => {
+        //     const input = timeInput.value;
+        //     const timeRegex = /^(\d{1,2}):(\d{1,2}):(\d{1,2})$/;
+        //     const match = input.match(timeRegex);
+        //     if (match) {
+        //         const hours = parseInt(match[1], 10);
+        //         const minutes = parseInt(match[2], 10);
+        //         const seconds = parseInt(match[3], 10);
+        //         return hours * 3600 + minutes * 60 + seconds;
+        //     } else {
+        //         return 0;
+        //     }
+        // };
+
+        // Timer controls
+        document.getElementById('startTimer').addEventListener('click', () => {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (timerTime > 0) {
+                    timerTime--;
+                    updateDisplay(timerTime);
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    alarmSound.play();
+                }
+            }, 1000);
+        });
+
+        document.getElementById('pauseTimer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        document.getElementById('resetTimer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerTime = 0;
+            updateDisplay(timerTime);
+        });
+
+        document.getElementById('add30Sec').addEventListener('click', () => {
+            timerTime += 30;
+            updateDisplay(timerTime);
+        });
+        document.getElementById('add1Min').addEventListener('click', () => {
+            timerTime += 60;
+            updateDisplay(timerTime);
+        });
+        document.getElementById('add5Min').addEventListener('click', () => {
+            timerTime += 300;
+            updateDisplay(timerTime);
+        });
+        document.getElementById('add10Min').addEventListener('click', () => {
+            timerTime += 600;
+            updateDisplay(timerTime);
+        });
+
+        // timeInput.addEventListener('change', () => {
+        //     timerTime = parseTimeInput();
+        //     updateDisplay(timerTime);
+        // });
+
+        // Stopwatch controls
+        document.getElementById('startStopwatch').addEventListener('click', () => {
+            if (stopwatchInterval) return;
+            stopwatchInterval = setInterval(() => {
+                stopwatchTime++;
+                updateDisplay(stopwatchTime);
+            }, 1000);
+        });
+
+        document.getElementById('pauseStopwatch').addEventListener('click', () => {
+            clearInterval(stopwatchInterval);
+            stopwatchInterval = null;
+        });
+
+        document.getElementById('resetStopwatch').addEventListener('click', () => {
+            clearInterval(stopwatchInterval);
+            stopwatchInterval = null;
+            stopwatchTime = 0;
+            updateDisplay(stopwatchTime);
+        });
+
+        // Switcher
+        document.getElementById('switchToTimer').addEventListener('click', () => {
+            document.getElementById('timerControls').style.display = 'block';
+            document.getElementById('stopwatchControls').style.display = 'none';
+            timerTime = 0;
+            updateDisplay(timerTime);
+        });
+
+        document.getElementById('switchToStopwatch').addEventListener('click', () => {
+            document.getElementById('timerControls').style.display = 'none';
+            document.getElementById('stopwatchControls').style.display = 'block';
+            stopwatchTime = 0;
+            updateDisplay(stopwatchTime);
+        });
+    </script>
+</body>
+</html>
