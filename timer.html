@@ -140,12 +140,12 @@
         // const timeInput = document.getElementById('timeInput');
 
         const updateDisplay = (time) => {
-            const hours = String(Math.floor(time / 3600)).padStart(2, '0');
-            const minutes = String(Math.floor((time % 3600) / 60)).padStart(2, '0');
-            const seconds = String(time % 60).padStart(2, '0');
-            display.textContent = `${hours}:${minutes}:${seconds}`;
+        const hours = String(Math.floor(time / 3600)).padStart(2, '0');
+        const minutes = String(Math.floor((time % 3600) / 60)).padStart(2, '0');
+        const seconds = String(time % 60).padStart(2, '0');
+        display.textContent = `${hours}:${minutes}:${seconds}`;
+        updateTabTitle(time); // Update the tab title here
         };
-
         // const parseTimeInput = () => {
         //     const input = timeInput.value;
         //     const timeRegex = /^(\d{1,2}):(\d{1,2}):(\d{1,2})$/;
@@ -244,6 +244,13 @@
             stopwatchTime = 0;
             updateDisplay(stopwatchTime);
         });
+        // Function to update the browser tab title
+        const updateTabTitle = (time) => {
+            const hours = String(Math.floor(time / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((time % 3600) / 60)).padStart(2, '0');
+            const seconds = String(time % 60).padStart(2, '0');
+            document.title = `⏳ ${hours}:${minutes}:${seconds}`;
+        };
     </script>
 </body>
 </html>
