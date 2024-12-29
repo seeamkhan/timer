@@ -13,7 +13,7 @@ This is a distraction-free Timer and Stopwatch web application designed for task
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/timer.git
+   git clone https://github.com/seeamkhan/timer.git
    cd timer
    ```
 2. Open `timer.html` in any modern web browser.
