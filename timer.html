@@ -46,62 +46,51 @@
             box-shadow: 10px 5px 10px rgba(0, 0, 0, 0.2);
         }
         .controls button {
-            margin: 10px;
+            margin: 5px;
             padding: 15px 25px;
             font-size: 1.2rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            background-color: #034f9c;
-            color: #fff;
+            background-color: #525050;
+            color: #ececec;
         }
         .controls button:hover {
             background-color: #0056b3;
         }
         .controls .primary {
-            background-color: #4CAF50;
+            background-color: #415342;
             font-weight: bold;
+            padding: 15px 25px;
         }
         .controls .primary:hover {
             background-color: #45a049;
+            padding: 15px 25px;
         }
         .controls .primary2 {
-            background-color: #cca702;
+            background-color: #776d42;
             font-weight: bold;
+            padding: 15px 25px;
         }
         .controls .primary2:hover {
             background-color: #a68802;
+            padding: 15px 25px;
         }
         .controls .primary3 {
-            background-color: #af6b4c;
+            background-color: #794746;
             font-weight: bold;
+            padding: 15px 25px;
         }
         .controls .primary3:hover {
             background-color: #995d42;
+            padding: 15px 25px;
         }
-        .switcher {
-            margin-bottom: 20px;
-            text-align: center;
+        .controls .switcher {
+            font-weight: bold;
         }
-
-        .switcher button {
-            padding: 15px 30px; /* Increase padding for a more prominent button */
-            font-size: 2rem;
-            cursor: pointer;
-            background: linear-gradient(135deg, #2b2929, #a1a1a1); /* Subtle gradient for depth */
-            color: #333;
-            border: 2px solid #888; /* Slightly thicker border for emphasis */
-            border-radius: 10px; /* Rounded corners for a softer look */
-            transition: all 0.3s ease; /* Smooth hover animations */
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-        }
-
-        .switcher button:hover {
-            background: linear-gradient(135deg, #a1a1a1, #787878); /* Darker gradient on hover */
-            color: #fff; /* Change text color to white */
-            border-color: #555; /* Darken the border on hover */
-            transform: translateY(-3px); /* Subtle "lift" effect on hover */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+        .controls .switcher:hover {
+            font-weight: bold;
+            background-color: #757677;
         }
 
         .time-input {
@@ -118,25 +107,25 @@
 <body>
     <div class="container">
         <!-- <h1>Timer & Stopwatch</h1> -->
-        <div class="switcher">
-            <button id="switchToTimer">Timer</button>
-            <button id="switchToStopwatch">Stopwatch</button>
+        <div class="controls">
+            <button class="switcher" id="switchToTimer">⏳ Timer</button>
+            <button class="switcher" id="switchToStopwatch">⏱️ Stopwatch</button>
         </div>
         <!-- <input type="text" id="timeInput" class="time-input" placeholder="00:00:00"> -->
         <div class="display" id="timeDisplay">00:00:00</div>
         <div class="controls" id="timerControls">
-            <button id="startTimer" class="primary">Start</button>
-            <button id="pauseTimer" class="primary2">Pause</button>
-            <button id="resetTimer" class="primary3">Reset</button>
+            <button id="startTimer" class="primary">▶ Start</button>
+            <button id="pauseTimer" class="primary2">⏸ Pause</button>
+            <button id="resetTimer" class="primary3">⟳ Reset</button>
             <button id="add30Sec">+30 Sec</button>
             <button id="add1Min">+1 Min</button>
             <button id="add5Min">+5 Min</button>
             <button id="add10Min">+10 Min</button>
         </div>
         <div class="controls" id="stopwatchControls" style="display: none;">
-            <button id="startStopwatch" class="primary">Start</button>
-            <button id="pauseStopwatch" class="primary2">Pause</button>
-            <button id="resetStopwatch" class="primary3">Reset</button>
+            <button id="startStopwatch" class="primary">▶ Start</button>
+            <button id="pauseStopwatch" class="primary2">⏸ Pause</button>
+            <button id="resetStopwatch" class="primary3">⟳ Reset</button>
         </div>
     </div>
 
